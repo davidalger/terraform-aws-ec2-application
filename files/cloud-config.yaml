@@ -1,0 +1,51 @@
+#cloud-config
+fqdn: ${hostname}
+hostname: ${hostname}
+
+# Generated sections of configuration that are (optionally) passed in by Terraform
+${users}
+${groups}
+${packages}
+${write_files}
+
+# The ${ebs_volume_id} placeholder here is replaced by Terraform when rendering the
+# template. Since however volume ids contain a hyphen that is excluded from the alias
+# created for the EBS device, the 'vol' prefix is specified here with the latter half
+# passed in using the following expression: split("-", aws_ebs_volume.default.id)[1]
+fs_setup:
+  - label: data00
+    filesystem: ext4
+    device: /dev/disk/by-id/nvme-Amazon_Elastic_Block_Store_vol${ebs_volume_id}
+    overwrite: false
+
+# Configures /etc/fstab for the data00 mount ensuring it will be mounted following reboot
+mounts:
+  - [ "LABEL=data00", "/data00" ]
+
+bootcmd:
+  # Mount /data00 volume and create /data00/home with home_root_t context before users-groups
+  # module is run allowing creation of users with persistent home directories in /data00/home
+  - |
+    test '!' -d /data00 && {
+      mkdir /data00
+      mount -o defaults -L data00 /data00
+      restorecon -vr /data00
+
+      mkdir -p /data00/home
+      semanage fcontext -a -e /home /data00/home
+    }
+
+  # This will run following reboot or stop/start operation, but will do nothing on the
+  # initial configuration cycle as write_files follows bootcmd during the init phase.
+  - test -x /usr/local/bin/mount-scratch-disks && /usr/local/bin/mount-scratch-disks
+
+runcmd:
+  # Ensure proper selinux contexts are applied to users created by cloud-init
+  - restorecon -vr /data00/home
+
+  # This will run only during the initial configuration sequence following the script
+  # having been written to disk by the write_files declaration.
+  - test -x /usr/local/bin/mount-scratch-disks && /usr/local/bin/mount-scratch-disks
+
+  # Generated commands optionally passed in by Terraform
+  ${runcmd}
