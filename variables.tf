@@ -44,6 +44,11 @@ variable "instance_packages" {
   default = []
 }
 
+variable "instance_bootcmd" {
+  type    = list(string)
+  default = []
+}
+
 variable "instance_runcmd" {
   type    = list(string)
   default = []

@@ -46,7 +46,8 @@ data "template_file" "config" {
         lookup(file, "content", "") == "" ? filebase64("${abspath(path.root)}/files/${file.path}") : ""
       )
     }] })
-    runcmd = length(var.instance_runcmd) > 0 ? indent(2, yamlencode(var.instance_runcmd)) : ""
+    bootcmd = length(var.instance_bootcmd) > 0 ? indent(2, yamlencode(var.instance_bootcmd)) : ""
+    runcmd  = length(var.instance_runcmd) > 0 ? indent(2, yamlencode(var.instance_runcmd)) : ""
   }
 }
 

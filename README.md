@@ -45,6 +45,7 @@ module "ec2" {
       content     = filebase64("files/run-ansible")
     }
   ]
+  instance_bootcmd  = var.instance_bootcmd
   instance_runcmd   = var.instance_runcmd
   ebs_volume_size   = var.ebs_volume_size
   trusted_ip_ranges = var.trusted_ip_ranges

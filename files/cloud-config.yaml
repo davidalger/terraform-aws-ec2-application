@@ -39,6 +39,9 @@ bootcmd:
   # initial configuration cycle as write_files follows bootcmd during the init phase.
   - test -x /usr/local/bin/mount-scratch-disks && /usr/local/bin/mount-scratch-disks
 
+  # Generated commands optionally passed in by Terraform
+  ${bootcmd}
+
 runcmd:
   # Ensure proper selinux contexts are applied to users created by cloud-init
   - restorecon -vr /data00/home
