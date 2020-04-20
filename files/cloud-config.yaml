@@ -43,6 +43,10 @@ bootcmd:
   ${bootcmd}
 
 runcmd:
+  # Disable ability to login via SSH as root user
+  - perl -i -pe 's/#PermitRootLogin .*/PermitRootLogin no/' /etc/ssh/sshd_config
+  - systemctl reload sshd.service
+
   # Ensure proper selinux contexts are applied to users created by cloud-init
   - restorecon -vr /data00/home
 

@@ -7,7 +7,8 @@ locals {
     }
   ], var.instance_files)
   instance_packages = distinct(concat([
-    "epel-release" # required for jq package in mount-scratch-disks
+    "epel-release", # required for jq package in mount-scratch-disks
+    "perl",         # required for adjusting sshd_config on startup
   ], var.instance_packages))
 }
 
