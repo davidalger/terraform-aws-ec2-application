@@ -8,6 +8,14 @@ This module currently only supports Nitro/NVMe instance types such as `m5.large`
 
 ## Usage
 
+After instance startup, monitor the output of the following for cloud-init completion before running Jmeter:
+
+```
+sudo journalctl --no-pager -f | grep cloud-init
+```
+
+Example Terraform configuration:
+
 ```
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
