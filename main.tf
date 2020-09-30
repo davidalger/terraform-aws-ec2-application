@@ -58,6 +58,7 @@ resource "aws_instance" "default" {
   key_name      = var.key_name != "" ? var.key_name : null
   user_data     = base64gzip(data.template_file.config.rendered)
   subnet_id     = var.subnet_id
+  monitoring    = true
 
   tags = merge(var.tags, {
     Name = var.name
