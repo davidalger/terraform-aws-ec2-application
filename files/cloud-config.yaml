@@ -29,7 +29,7 @@ bootcmd:
     test '!' -d /data00 && {
       mkdir /data00
       mount -o defaults -L data00 /data00
-      restorecon -vr /data00
+      restorecon -v /data00
 
       mkdir -p /data00/home
       semanage fcontext -a -e /home /data00/home
