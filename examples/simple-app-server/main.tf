@@ -33,5 +33,5 @@ module "ec2" {
   subnet_id = module.vpc.public_subnets[0]
 
   instance_type = "t3.micro"
-  key_name      = "davidalger"    # SSH Key pre-imported into AWS account; authorized on centos user
+  key_name      = "davidalger" # SSH Key pre-imported into AWS account; authorized on centos user
 }
